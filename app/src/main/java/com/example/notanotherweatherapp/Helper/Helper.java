@@ -1,5 +1,7 @@
 package com.example.notanotherweatherapp.Helper;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -32,6 +34,9 @@ public class Helper {
                 stream = sb.toString();
                 httpURLConnection.disconnect();
 
+            }
+            else{
+                Log.e("TAG", "Connection could not be established, status code: " + httpURLConnection.getResponseCode());
             }
         }
         catch (MalformedURLException e){
