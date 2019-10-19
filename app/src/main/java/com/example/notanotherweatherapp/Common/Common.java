@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Common {
-    public static final String API_KEY = "";
+    public static final String API_KEY = "179abdcaee4bb7425dfbf57ddb5427cd";
     public static final String API_LINK = "http://api.openweathermap.org/data/2.5/weather";
 
     public static String APIRequest(String lat,String lng){
@@ -21,8 +21,8 @@ public class Common {
         return dateFormat.format(date);
     }
 
-    public static String getImage(){
-        return String.format("http://openweathermap.org/img/w/%s.png");
+    public static String getImage(String s){
+        return String.format("http://openweathermap.org/img/w/%s.png", s);
     }
 
     public static String getDateNow(){

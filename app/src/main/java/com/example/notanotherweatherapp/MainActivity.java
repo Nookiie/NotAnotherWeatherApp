@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 import com.example.notanotherweatherapp.Common.Common;
 import com.example.notanotherweatherapp.Helper.Helper;
+import com.example.notanotherweatherapp.Model.Main;
 import com.example.notanotherweatherapp.Model.OpenWeatherMap;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -27,6 +28,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.notanotherweatherapp.ui.main.SectionsPagerAdapter;
 import com.google.gson.Gson;
@@ -37,23 +40,33 @@ import java.lang.reflect.Type;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
+    TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius;
+    ImageView imageView;
+
     LocationManager locationManager;
     String provider;
     static double lat, lon;
     OpenWeatherMap openWeatherMap = new OpenWeatherMap();
+
     int MY_PERMISSION = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
-        FloatingActionButton fab = findViewById(R.id.fab);
 
+        //View Assignment
+        {
+            txtCity = findViewById(R.id.txtCity);
+            txtLastUpdate = findViewById(R.id.txtLastUpdate);
+            txtCelsius = findViewById(R.id.txtCelsius);
+            txtDescription = findViewById(R.id.txtDescription);
+            txtHumidity = findViewById(R.id.txtHumidity);
+            txtTime = findViewById(R.id.txtTime);
+            imageView = findViewById(R.id.imageView);
+        }
+
+        // Getting coordinates
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         provider = locationManager.getBestProvider(new Criteria(), false);
 
@@ -74,13 +87,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             Log.e("TAG", "No Location Loaded");
         }
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
@@ -105,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public void onLocationChanged(Location location) {
         lat = location.getLatitude();
         lon = location.getLongitude();
+
+        new GetWeather().execute(Common.APIRequest(String.valueOf(lat), String.valueOf(lon)));
     }
 
     @Override
@@ -154,9 +162,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             openWeatherMap = gson.fromJson(s, mType);
             pd.dismiss();
 
-            //TODO: complete all txt view logic once done with the Interface Views
-            //
-            //
+            txtCity.setText(String.format("%s, %s, ", openWeatherMap.getName(), openWeatherMap.getSys().getCountry()));
+            txtLastUpdate.setText(String.format("Last updated: %s", Common.getDateNow()));
+            txtDescription.setText(String.format("%s", openWeatherMap.getWeatherList().get(0).getDescription()));
+            txtHumidity.setText(String.format("%s", openWeatherMap.getMain().getHumidity()));
+            txtTime.setText(String.format("%s/%s", Common.unixTimeStampToDate(openWeatherMap.getSys().getSunrise()), Common.unixTimeStampToDate(openWeatherMap.getSys().getSunset())));
+            txtCelsius.setText(String.format("%.2f", openWeatherMap.getMain().getTemp()));
+
+            Picasso.get()
+                    .load(Common.getImage(openWeatherMap.getWeatherList().get(0).getIcon()))
+                    .into(imageView);
         }
     }
 }
