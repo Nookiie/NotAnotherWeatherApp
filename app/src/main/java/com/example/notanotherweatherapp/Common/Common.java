@@ -10,7 +10,13 @@ public class Common {
 
     public static String APIRequest(String lat,String lng){
         StringBuilder sb = new StringBuilder(API_LINK);
-        sb.append(String.format("?lat=%s&lon%s&APPID=%s&units=metric", lat, lng, API_KEY));
+        sb.append(String.format("?lat=%s&lon=%s&APPID=%s&units=metric", lat, lng, API_KEY));
+        return sb.toString();
+    }
+
+    public static String APIRequest(String city){
+        StringBuilder sb = new StringBuilder(API_LINK);
+        sb.append(String.format("?q=%s&APPID=%s&units=metric", city, API_KEY));
         return sb.toString();
     }
 
@@ -26,7 +32,7 @@ public class Common {
     }
 
     public static String getDateNow(){
-        DateFormat dateFormat = new SimpleDateFormat("dd mmmm yyyy hh:mm");
+        DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy hh:mm");
         Date date = new Date();
         return dateFormat.format(date);
     }

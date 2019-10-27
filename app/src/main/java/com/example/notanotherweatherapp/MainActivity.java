@@ -37,6 +37,7 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
@@ -55,8 +56,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //View Assignment
-        {
+
             txtCity = findViewById(R.id.txtCity);
             txtLastUpdate = findViewById(R.id.txtLastUpdate);
             txtCelsius = findViewById(R.id.txtCelsius);
@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             txtHumidity = findViewById(R.id.txtHumidity);
             txtTime = findViewById(R.id.txtTime);
             imageView = findViewById(R.id.imageView);
-        }
 
         // Getting coordinates
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -86,7 +85,24 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         if (location == null) {
             Log.e("TAG", "No Location Loaded");
         }
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{
+
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_NETWORK_STATE,
+                    Manifest.permission.SYSTEM_ALERT_WINDOW,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+
+            }, MY_PERMISSION);
+            locationManager.removeUpdates(this);
+        }
     }
 
     @Override
@@ -130,9 +146,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     }
 
-    private class GetWeather extends AsyncTask<String, Void, String>{
+    private class GetWeather extends AsyncTask<String,Void,String>{
         ProgressDialog pd = new ProgressDialog(MainActivity.this);
 
+        @Override
         protected  void onPreExecute(){
             super.onPreExecute();
             pd.setTitle("Executing...");
@@ -153,10 +170,16 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            if(s.contains("Error: Could not find city")){
+            if(s == null){
+                txtCity.setText(String.format("Error, Connection could not be established"));
+                return;
+            }
+
+            if(s.contains("Error: Not found city")){
                 pd.dismiss();
                 return;
             }
+
             Gson gson = new Gson();
             Type mType = new TypeToken<OpenWeatherMap>(){}.getType();
             openWeatherMap = gson.fromJson(s, mType);
@@ -164,13 +187,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
             txtCity.setText(String.format("%s, %s, ", openWeatherMap.getName(), openWeatherMap.getSys().getCountry()));
             txtLastUpdate.setText(String.format("Last updated: %s", Common.getDateNow()));
-            txtDescription.setText(String.format("%s", openWeatherMap.getWeatherList().get(0).getDescription()));
+            txtDescription.setText(String.format("%s", openWeatherMap.getWeather().get(0).getDescription()));
             txtHumidity.setText(String.format("%s", openWeatherMap.getMain().getHumidity()));
             txtTime.setText(String.format("%s/%s", Common.unixTimeStampToDate(openWeatherMap.getSys().getSunrise()), Common.unixTimeStampToDate(openWeatherMap.getSys().getSunset())));
-            txtCelsius.setText(String.format("%.2f", openWeatherMap.getMain().getTemp()));
+            txtCelsius.setText(String.format("%s", (int)openWeatherMap.getMain().getTemp()) + "°");
 
             Picasso.get()
-                    .load(Common.getImage(openWeatherMap.getWeatherList().get(0).getIcon()))
+                    .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
                     .into(imageView);
         }
     }

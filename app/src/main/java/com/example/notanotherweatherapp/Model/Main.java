@@ -4,8 +4,8 @@ public class Main {
     private double temp;
     private double pressure;
     private int humidity;
-    private int temp_min;
-    private int temp_max;
+    private double temp_min;
+    private double temp_max;
 
     public Main(double temp, double pressure, int humidity, int temp_min, int temp_max) {
         this.temp = temp;
@@ -39,7 +39,7 @@ public class Main {
         this.humidity = humidity;
     }
 
-    public int getTemp_min() {
+    public double getTemp_min() {
         return temp_min;
     }
 
@@ -47,7 +47,7 @@ public class Main {
         this.temp_min = temp_min;
     }
 
-    public int getTemp_max() {
+    public double getTemp_max() {
         return temp_max;
     }
 

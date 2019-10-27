@@ -15,6 +15,7 @@ public class OpenWeatherMap {
     private int id;
     private String name;
     private int cod;
+    private String city;
 
     public OpenWeatherMap(){
 
@@ -43,12 +44,12 @@ public class OpenWeatherMap {
         this.coordinates = coordinates;
     }
 
-    public List<Weather> getWeatherList() {
+    public List<Weather> getWeather() {
         return weather;
     }
 
-    public void setWeatherList(List<Weather> weatherList) {
-        this.weather = weatherList;
+    public void setWeather(List<Weather> weather) {
+        this.weather = weather;
     }
 
     public String getBase() {
@@ -130,4 +131,8 @@ public class OpenWeatherMap {
     public void setCod(int cod) {
         this.cod = cod;
     }
+
+    public void setCity(String ctiy){this.city = city;}
+
+    public String getCity(){return city;}
 }

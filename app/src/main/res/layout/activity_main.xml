@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="20">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -33,47 +34,7 @@
         android:textStyle="bold"
         android:textSize="36sp"
         android:gravity="center"
-        />
-
-    <TextView
-        android:id="@+id/txtLastUpdate"
-        android:layout_width="match_parent"
-        android:text=""
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="35sp"
-        android:gravity="center"
-        />
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textStyle="bold"
-        android:gravity="center"
-        />
-
-    <TextView
-        android:id="@+id/txtDescription"
-        android:layout_width="match_parent"
-        android:text=""
-        android:layout_marginTop="180dp"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:gravity="center"
-        />
-
-    <TextView
-        android:id="@+id/txtHumidity"
-        android:layout_width="match_parent"
-        android:text=""
-        android:layout_marginTop="180dp"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:textSize="45sp"
-        android:gravity="center"
+        android:layout_weight="2"
         />
 
     <TextView
@@ -82,19 +43,64 @@
         android:text=""
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:textSize="56sp"
         android:gravity="center"
+        android:layout_weight="2"/>
+
+
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text=""
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_weight="4"
         />
 
+    <TextView
+        android:id="@+id/txtDescription"
+        android:layout_width="match_parent"
+        android:text=""
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="40dp"
+        android:gravity="center"
+        android:layout_weight="1"
+        />
 
     <TextView
         android:id="@+id/txtCelsius"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:text=""
         android:textStyle="bold"
         android:textSize="25sp"
         android:gravity="center"
+        android:layout_weight="1"
+        />
+
+    <TextView
+        android:id="@+id/txtHumidity"
+        android:layout_width="match_parent"
+        android:text=""
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="45sp"
+        android:gravity="center"
+        android:layout_weight="0.5"
+        android:visibility="gone"
+        />
+    <TextView
+        android:id="@+id/txtLastUpdate"
+        android:layout_width="match_parent"
+        android:text=""
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="35sp"
+        android:gravity="center"
+        android:layout_weight="3"
         />
 
 </LinearLayout>
