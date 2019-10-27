@@ -24,10 +24,14 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,7 +46,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
     TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius;
+    EditText editCity;
     ImageView imageView;
+    Button btnCity;
 
     LocationManager locationManager;
     String provider;
@@ -57,13 +63,39 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         setContentView(R.layout.activity_main);
 
 
-            txtCity = findViewById(R.id.txtCity);
-            txtLastUpdate = findViewById(R.id.txtLastUpdate);
-            txtCelsius = findViewById(R.id.txtCelsius);
-            txtDescription = findViewById(R.id.txtDescription);
-            txtHumidity = findViewById(R.id.txtHumidity);
-            txtTime = findViewById(R.id.txtTime);
-            imageView = findViewById(R.id.imageView);
+        txtCity = findViewById(R.id.txtCity);
+        txtLastUpdate = findViewById(R.id.txtLastUpdate);
+        txtCelsius = findViewById(R.id.txtCelsius);
+        txtDescription = findViewById(R.id.txtDescription);
+        txtHumidity = findViewById(R.id.txtHumidity);
+        txtTime = findViewById(R.id.txtTime);
+        imageView = findViewById(R.id.imageView);
+        editCity = findViewById(R.id.customCityEdit);
+
+        editCity.setOnEditorActionListener(new EditText.OnEditorActionListener(){
+
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE){
+                    String city = editCity.getText().toString();
+                    if(city.isEmpty() || city == null){
+                        return false;
+                    }
+                    else{
+                        new GetWeather().execute(Common.APIRequest(city));
+
+                        View view = getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
+
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
 
         // Getting coordinates
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
