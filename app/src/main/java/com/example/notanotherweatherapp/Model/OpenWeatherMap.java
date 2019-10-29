@@ -1,5 +1,8 @@
 package com.example.notanotherweatherapp.Model;
 
+import com.example.notanotherweatherapp.Common.Common;
+
+import java.util.Date;
 import java.util.List;
 
 public class OpenWeatherMap {
@@ -135,4 +138,8 @@ public class OpenWeatherMap {
     public void setCity(String ctiy){this.city = city;}
 
     public String getCity(){return city;}
+
+    public String getLastUpdate(){
+        return Common.getDateNow();
+    }
 }

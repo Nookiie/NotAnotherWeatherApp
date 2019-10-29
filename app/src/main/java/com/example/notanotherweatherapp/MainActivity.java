@@ -12,48 +12,41 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import com.example.notanotherweatherapp.Common.Common;
+import com.example.notanotherweatherapp.Database.DBManager;
 import com.example.notanotherweatherapp.Helper.Helper;
-import com.example.notanotherweatherapp.Model.Main;
 import com.example.notanotherweatherapp.Model.OpenWeatherMap;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 
 import androidx.core.app.ActivityCompat;
-import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.notanotherweatherapp.ui.main.SectionsPagerAdapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
     TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius;
     EditText editCity;
     ImageView imageView;
-    Button btnCity;
 
     LocationManager locationManager;
     String provider;
     static double lat, lon;
     OpenWeatherMap openWeatherMap = new OpenWeatherMap();
+
+    DBManager db = new DBManager(this);
 
     int MY_PERMISSION = 0;
 
@@ -217,6 +210,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             openWeatherMap = gson.fromJson(s, mType);
             pd.dismiss();
 
+            saveToDB(openWeatherMap);
+
             txtCity.setText(String.format("%s, %s, ", openWeatherMap.getName(), openWeatherMap.getSys().getCountry()));
             txtLastUpdate.setText(String.format("Last updated: %s", Common.getDateNow()));
             txtDescription.setText(String.format("%s", openWeatherMap.getWeather().get(0).getDescription()));
@@ -227,6 +222,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             Picasso.get()
                     .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
                     .into(imageView);
+        }
+
+        private void saveToDB(OpenWeatherMap map){
+            db.open();
+            db.insertData(map);
+            Toast.makeText(MainActivity.this, db.fetchWithLimiter(5), Toast.LENGTH_LONG).show();
+            db.close();
         }
     }
 }
