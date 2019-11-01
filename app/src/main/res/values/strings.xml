@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">NotAnotherWeatherApp</string>
-    <string name="tab_text_1">Locations</string>
-    <string name="tab_text_2">Settings</string>
+    <string name="tab_text_1">Main</string>
+    <string name="tab_text_2">History</string>
 </resources>
