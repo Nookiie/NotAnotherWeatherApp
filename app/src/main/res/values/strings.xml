@@ -2,4 +2,5 @@
     <string name="app_name">NotAnotherWeatherApp</string>
     <string name="tab_text_1">Main</string>
     <string name="tab_text_2">History</string>
+    <string name="tab_text_3">Forecast</string>
 </resources>

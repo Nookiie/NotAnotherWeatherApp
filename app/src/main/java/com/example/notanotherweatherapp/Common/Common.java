@@ -2,6 +2,10 @@ package com.example.notanotherweatherapp.Common;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Common {
@@ -36,4 +40,33 @@ public class Common {
         Date date = new Date();
         return dateFormat.format(date);
     }
+
+    public static String getDayOfWeek(String dateString) throws Exception{
+        DateFormat dateFormat = new SimpleDateFormat(("HH:mm"));
+        Calendar calendar = Calendar.getInstance();
+        Date date = new SimpleDateFormat("yyyy-mm-dd").parse(dateString);
+
+        calendar.setTime(date);
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch(day){
+            case 1:
+                return "Sunday";
+            case 2:
+                return "Monday";
+            case 3:
+                return "Tuesday";
+            case 4:
+                return "Wednesday";
+            case 5:
+                return "Thursday";
+            case 6:
+                return "Friday";
+            case 7:
+                return "Saturday";
+            default:
+                return "Not Found!";
+        }
+    }
+
 }
