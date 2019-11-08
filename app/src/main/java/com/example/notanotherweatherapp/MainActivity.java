@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                         return false;
                     }
                     else{
-                        new getWeather().execute(Common.APIRequest(city));
+                        new getWeatherAsync().execute(Common.APIRequest(city));
 
                         View view = getCurrentFocus();
                         if (view != null) {
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         lat = location.getLatitude();
         lon = location.getLongitude();
 
-        new getWeather().execute(Common.APIRequest(String.valueOf(lat), String.valueOf(lon)));
+        new getWeatherAsync().execute(Common.APIRequest(String.valueOf(lat), String.valueOf(lon)));
     }
 
     @Override
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     }
 
-    private class getWeather extends AsyncTask<String,Void,String>{
+    private class getWeatherAsync extends AsyncTask<String,Void,String>{
         ProgressDialog pd = new ProgressDialog(MainActivity.this);
 
         @Override
