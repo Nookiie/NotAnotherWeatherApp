@@ -1,4 +1,4 @@
-package com.example.notanotherweatherapp.Database;
+package com.example.notanotherweatherapp.Helper;
 
 import android.content.Context;
 import android.widget.Toast;

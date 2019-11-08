@@ -29,7 +29,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -233,7 +232,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         private void saveToDB(OpenWeatherMap map){
             db.open();
             db.insertData(map);
-            Toast.makeText(MainActivity.this, db.fetchWithLimiter(5), Toast.LENGTH_LONG).show();
             db.close();
         }
     }
