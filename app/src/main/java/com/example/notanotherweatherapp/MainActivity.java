@@ -3,6 +3,7 @@ package com.example.notanotherweatherapp;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -24,6 +25,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius;
     EditText editCity;
     ImageView imageView;
+    Button btnHistory;
 
     LocationManager locationManager;
     String provider;
@@ -64,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         txtTime = findViewById(R.id.txtTime);
         imageView = findViewById(R.id.imageView);
         editCity = findViewById(R.id.customCityEdit);
+        btnHistory = findViewById(R.id.btnHistory);
+
+        btnHistory.setOnClickListener(onClick);
 
         editCity.setOnEditorActionListener(new EditText.OnEditorActionListener(){
 
@@ -75,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                         return false;
                     }
                     else{
-                        new GetWeather().execute(Common.APIRequest(city));
+                        new getWeather().execute(Common.APIRequest(city));
 
                         View view = getCurrentFocus();
                         if (view != null) {
@@ -153,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         lat = location.getLatitude();
         lon = location.getLongitude();
 
-        new GetWeather().execute(Common.APIRequest(String.valueOf(lat), String.valueOf(lon)));
+        new getWeather().execute(Common.APIRequest(String.valueOf(lat), String.valueOf(lon)));
     }
 
     @Override
@@ -171,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     }
 
-    private class GetWeather extends AsyncTask<String,Void,String>{
+    private class getWeather extends AsyncTask<String,Void,String>{
         ProgressDialog pd = new ProgressDialog(MainActivity.this);
 
         @Override
@@ -231,4 +237,18 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             db.close();
         }
     }
+
+    private View.OnClickListener onClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()){
+                case R.id.btnHistory:
+                    Intent myIntent = new Intent(MainActivity.this, HistoryActivity.class);
+                    MainActivity.this.startActivity(myIntent);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 }

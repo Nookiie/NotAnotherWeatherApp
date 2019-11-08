@@ -4,11 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.notanotherweatherapp.Database.DBManager;
@@ -30,7 +34,7 @@ public class HistoryActivity extends AppCompatActivity {
 
     DBManager db = new DBManager(this);
 
-    private final int HISTORY_ITEM_COUNT = 5;
+    private final int HISTORY_ITEM_COUNT = 17;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,7 @@ public class HistoryActivity extends AppCompatActivity {
         historyLayout = findViewById(R.id.historyLayout);
 
         btnRefresh.setOnClickListener(onClick);
+        btnBack.setOnClickListener(onClick);
 
         refresh();
     }
@@ -54,15 +59,17 @@ public class HistoryActivity extends AppCompatActivity {
                     refresh();
                     break;
                 case R.id.btnBack:
-
+                    Intent myIntent = new Intent(HistoryActivity.this, MainActivity.class);
+                    HistoryActivity.this.startActivity(myIntent);
                     break;
-
             }
         }
     };
 
     private void refresh() {
+        db.open();
         String[] historyStringArray = getDBData(HISTORY_ITEM_COUNT);
+        db.close();
 
         historyLayout.removeAllViews();
         historyLayout.setWeightSum(HISTORY_ITEM_COUNT);
@@ -70,6 +77,8 @@ public class HistoryActivity extends AppCompatActivity {
         for(String item : historyStringArray){
             TextView tv = new TextView(this);
             tv.setText(item);
+            tv.setTextSize(20);
+            tv.setTextAppearance(this, android.R.style.TextAppearance_DeviceDefault_Large);
             historyLayout.addView(tv);
         }
     }
