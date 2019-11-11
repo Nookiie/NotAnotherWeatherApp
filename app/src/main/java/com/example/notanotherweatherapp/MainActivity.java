@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     TextView txtCity, txtLastUpdate, txtDescription, txtHumidity, txtTime, txtCelsius;
     EditText editCity;
     ImageView imageView;
-    Button btnHistory;
+    Button btnHistory, btnRefresh;
 
     LocationManager locationManager;
     String provider;
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         imageView = findViewById(R.id.imageView);
         editCity = findViewById(R.id.customCityEdit);
         btnHistory = findViewById(R.id.btnHistory);
+        btnRefresh = findViewById(R.id.btnRefresh);
 
         btnHistory.setOnClickListener(onClick);
 
@@ -158,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         lat = location.getLatitude();
         lon = location.getLongitude();
 
-        new getWeatherAsync().execute(Common.APIRequest(String.valueOf(lat), String.valueOf(lon)));
+        refresh();
     }
 
     @Override
@@ -244,9 +245,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                     Intent myIntent = new Intent(MainActivity.this, HistoryActivity.class);
                     MainActivity.this.startActivity(myIntent);
                     break;
+                case R.id.btnRefresh:
+                    refresh();
+                    break;
                 default:
                     break;
             }
         }
     };
+    private void refresh(){
+        new getWeatherAsync().execute(Common.APIRequest(String.valueOf(lat), String.valueOf(lon)));
+    }
 }

@@ -75,15 +75,37 @@ public class HistoryActivity extends AppCompatActivity {
         historyLayout.setWeightSum(HISTORY_ITEM_COUNT);
 
         for(String item : historyStringArray){
-            TextView tv = new TextView(this);
+            final LinearLayout layout = new LinearLayout(this);
+            layout.setWeightSum(2);
+            layout.setOrientation(LinearLayout.HORIZONTAL);
+
+            final TextView tv = new TextView(this);
             tv.setText(item);
             tv.setTextSize(20);
             tv.setTextAppearance(this, android.R.style.TextAppearance_DeviceDefault_Large);
-            historyLayout.addView(tv);
+            Button btnDelete = new Button(this);
+            btnDelete.setText("X");
+            btnDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = tv.getText().toString().indexOf(' ');
+                    String idToString = tv.getText().subSequence(0, index).toString();
+                    int id = Integer.parseInt(idToString);
+                    db.open();
+                    db.delete(id);
+                    db.close();
+
+                    refresh();
+                }
+            });
+            layout.addView(tv);
+            layout.addView(btnDelete);
+            historyLayout.addView(layout);
         }
     }
 
     private String[] getDBData(int historyCount){
             return db.fetchWithLimiter(historyCount).split("\n");
         }
+
     }

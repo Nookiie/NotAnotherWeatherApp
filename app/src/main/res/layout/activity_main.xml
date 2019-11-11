@@ -117,10 +117,27 @@
         android:singleLine="true"
         android:imeOptions="actionDone"/>
 
-    <Button
-        android:id="@+id/btnHistory"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="History" />
+        android:layout_weight="1"
+        android:weightSum="2"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Refresh"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btnHistory"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="History"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
 </LinearLayout>
