@@ -2,7 +2,6 @@ package com.example.notanotherweatherapp.Model;
 
 import com.example.notanotherweatherapp.Common.Common;
 
-import java.util.Date;
 import java.util.List;
 
 public class OpenWeatherMap {
@@ -19,6 +18,7 @@ public class OpenWeatherMap {
     private String name;
     private int cod;
     private String city;
+    private int timezone;
 
     public OpenWeatherMap(){
 
@@ -141,5 +141,13 @@ public class OpenWeatherMap {
 
     public String getLastUpdate(){
         return Common.getDateNow();
+    }
+
+    public int getTimezone(){
+        return timezone;
+    }
+
+    public void setTimezone(int timezone){
+        this.timezone = timezone;
     }
 }

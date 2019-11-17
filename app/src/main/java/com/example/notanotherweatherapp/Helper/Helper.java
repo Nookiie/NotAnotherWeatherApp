@@ -26,7 +26,7 @@ public class Helper {
             URL url = new URL(urlString);
             HttpURLConnection httpURLConnection = (HttpURLConnection)url.openConnection();
 
-            if(httpURLConnection.getResponseCode() == 200)
+            if(httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK)
             {
                 BufferedReader r = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
                 StringBuilder sb = new StringBuilder();
@@ -37,6 +37,17 @@ public class Helper {
                 stream = sb.toString();
                 httpURLConnection.disconnect();
             }
+
+            else if(httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_FOUND){
+                stream = "ERROR: City Not Found";
+                httpURLConnection.disconnect();
+            }
+
+            else{
+                stream = "ERROR: Could Not Establish Connection";
+                httpURLConnection.disconnect();
+            }
+
         }
         catch (MalformedURLException e){
             e.printStackTrace();

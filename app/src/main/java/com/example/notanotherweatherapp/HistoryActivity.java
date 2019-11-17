@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -74,6 +75,12 @@ public class HistoryActivity extends AppCompatActivity {
         historyLayout.removeAllViews();
         historyLayout.setWeightSum(HISTORY_ITEM_COUNT);
 
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1.0f
+        );
+
         for(String item : historyStringArray){
             final LinearLayout layout = new LinearLayout(this);
             layout.setWeightSum(2);
@@ -81,8 +88,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             final TextView tv = new TextView(this);
             tv.setText(item);
-            tv.setTextSize(20);
-            tv.setTextAppearance(this, android.R.style.TextAppearance_DeviceDefault_Large);
+            tv.setTextAppearance(this, android.R.style.TextAppearance_DeviceDefault_Medium);
             Button btnDelete = new Button(this);
             btnDelete.setText("X");
             btnDelete.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +97,7 @@ public class HistoryActivity extends AppCompatActivity {
                     int index = tv.getText().toString().indexOf(' ');
                     String idToString = tv.getText().subSequence(0, index).toString();
                     int id = Integer.parseInt(idToString);
+
                     db.open();
                     db.delete(id);
                     db.close();
@@ -100,6 +107,8 @@ public class HistoryActivity extends AppCompatActivity {
             });
             layout.addView(tv);
             layout.addView(btnDelete);
+
+            layout.setLayoutParams(layoutParams);
             historyLayout.addView(layout);
         }
     }
@@ -107,5 +116,4 @@ public class HistoryActivity extends AppCompatActivity {
     private String[] getDBData(int historyCount){
             return db.fetchWithLimiter(historyCount).split("\n");
         }
-
     }

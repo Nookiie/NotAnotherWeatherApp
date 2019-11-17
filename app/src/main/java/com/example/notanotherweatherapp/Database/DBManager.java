@@ -2,12 +2,15 @@ package com.example.notanotherweatherapp.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.notanotherweatherapp.Common.Common;
 import com.example.notanotherweatherapp.Model.OpenWeatherMap;
+
+import java.util.HashMap;
 
 public class DBManager {
     private SQLiteDatabase sqliteDatabase;
@@ -78,6 +81,27 @@ public class DBManager {
             buffer.append(cid + " " + city + " " +update + " \n");
         }
         return buffer.toString();
+    }
+
+    public int getID(String city, String date){
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String[] columns = {dbHelper.getUID(), dbHelper.getCity(), dbHelper.getLastUpdate()};
+        Cursor cursor = db.query(dbHelper.getTableName(), columns, null, null, null,null, null);
+        int id = -1;
+
+        StringBuffer buffer = new StringBuffer();
+
+        while(cursor.moveToNext()){
+            int cid = cursor.getInt(cursor.getColumnIndex(dbHelper.getUID()));
+            id = cid;
+        }
+
+        if(id == -1){
+            throw new Resources.NotFoundException("Int Value not found!");
+        }
+        else{
+            return id;
+        }
     }
 
     public String fetchWithLimiter(int limit){

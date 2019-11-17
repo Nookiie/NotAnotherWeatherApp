@@ -15,6 +15,7 @@ import android.os.Bundle;
 import com.example.notanotherweatherapp.Common.Common;
 import com.example.notanotherweatherapp.Database.DBManager;
 import com.example.notanotherweatherapp.Helper.Helper;
+import com.example.notanotherweatherapp.Helper.Message;
 import com.example.notanotherweatherapp.Model.OpenWeatherMap;
 
 import androidx.core.app.ActivityCompat;
@@ -35,6 +36,7 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
@@ -81,7 +83,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                         return false;
                     }
                     else{
-                        new getWeatherAsync().execute(Common.APIRequest(city));
+                        if(getInputStatus(city) == "Coordinates"){
+                            String params[] = editCity.getText().toString().split(", ");
+
+                            if (params.length != 2){
+                                Message.message(MainActivity.this, "Incorrect format, example usage: 25.04, 12.03");
+                                return false;
+                            }
+                            double latCustom = Double.parseDouble(params[0]);
+                            double lonCustom = Double.parseDouble(params[1]);
+                            new getWeatherAsync().execute(Common.APIRequest(String.valueOf(latCustom), String.valueOf(lonCustom)));
+                        }
+                        else{
+                            new getWeatherAsync().execute(Common.APIRequest(city));
+                        }
 
                         View view = getCurrentFocus();
                         if (view != null) {
@@ -206,8 +221,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 return;
             }
 
-            if(s.contains("Error: Not found city")){
+            if(s.contains("ERROR")){
                 pd.dismiss();
+                displayError("Could Not Find City or Coordinates");
                 return;
             }
 
@@ -225,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             txtTime.setText(String.format("%s/%s", Common.unixTimeStampToDate(openWeatherMap.getSys().getSunrise()), Common.unixTimeStampToDate(openWeatherMap.getSys().getSunset())));
             txtCelsius.setText(String.format("%s", (int)openWeatherMap.getMain().getTemp()) + "°");
 
+            imageView.setVisibility(View.VISIBLE);
             Picasso.get()
                     .load(Common.getImage(openWeatherMap.getWeather().get(0).getIcon()))
                     .into(imageView);
@@ -255,5 +272,29 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     };
     private void refresh(){
         new getWeatherAsync().execute(Common.APIRequest(String.valueOf(lat), String.valueOf(lon)));
+    }
+
+    private String getInputStatus(String input){
+        if(input.isEmpty()){
+            return "Empty";
+        }
+
+        if(input.matches(".*\\d.*")){
+            return "Coordinates";
+        }
+
+            return "City";
+    }
+
+    private void displayError(String error){
+        txtCity.setText(error);
+
+        txtLastUpdate.setText("");
+        txtDescription.setText("");
+        txtHumidity.setText("");
+        txtTime.setText("");
+        txtCelsius.setText("");
+        imageView.setVisibility(View.INVISIBLE);
+
     }
 }
