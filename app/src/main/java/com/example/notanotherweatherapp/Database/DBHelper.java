@@ -20,6 +20,12 @@ public class DBHelper extends SQLiteOpenHelper
     private static final String Time = "Time";    // Column 5
     private Context context;
 
+    private static final String CREATE_TABLE = "CREATE TABLE " +TABLE_NAME+
+            " ("+UID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+City+" VARCHAR(255) ,"+ LastUpdate+" VARCHAR(225));";
+
+    private static final String DROP_TABLE ="DROP TABLE IF EXISTS "+TABLE_NAME;
+
+
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_Version);
         this.context = context;
@@ -60,11 +66,6 @@ public class DBHelper extends SQLiteOpenHelper
     public String getDescription(){
         return Description;
     }
-
-    private static final String CREATE_TABLE = "CREATE TABLE " +TABLE_NAME+
-            " ("+UID+" INTEGER PRIMARY KEY AUTOINCREMENT, "+City+" VARCHAR(255) ,"+ LastUpdate+" VARCHAR(225));";
-
-    private static final String DROP_TABLE ="DROP TABLE IF EXISTS "+TABLE_NAME;
 
     @Override
     public void onCreate(SQLiteDatabase db) {
